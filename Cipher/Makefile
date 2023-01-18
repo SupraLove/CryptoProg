@@ -1,16 +1,22 @@
-CC=g++
-CFLAGS=-c -Wall -Wextra
-LDFLAGS=-lcrypto++
-SOURCES= CBC.cpp cipher.cpp interface.cpp
-OBJECTS=$(SOURCES:.cpp=.o)
-EXECUTABLE=CBC
+.PHONY: all debug release clean
 
-all: $(SOURCES) $(EXECUTABLE)
-	
-$(EXECUTABLE): $(OBJECTS) 
-	$(CC) $(OBJECTS) -o $@ $(LDFLAGS)
+RELEASE_FLAGS = -O2 -Wall -DNDEBUG
+DEBUG_FLAGS   = -g -O0 -Wall
+RELEASE_EXEC  = cipher
+DEBUG_EXEC    = cipher-dbg
+SOURCE        = cipher.cpp
 
-.cpp.o:
-	$(CC) $(CFLAGS) $< -o $@
+all: debug release
+
+debug: $(DEBUG_EXEC)
+
+$(DEBUG_EXEC): $(SOURCE)
+	g++ $(DEBUG_FLAGS) $(SOURCE) -o $(DEBUG_EXEC) 
+
+release: $(RELEASE_EXEC)
+
+$(RELEASE_EXEC): $(SOURCE)
+	g++ $(RELEASE_FLAGS) $(SOURCE) -o $(RELEASE_EXEC)
+
 clean:
-	rm *.hex *.bin *.o $(EXECUTABLE)
+	rm -f $(RELEASE_EXEC) $(DEBUG_EXEC)
