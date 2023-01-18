@@ -1,17 +1,22 @@
-.PHONY: all release clean
+.PHONY: all debug release clean
 
 RELEASE_FLAGS = -O2 -Wall -DNDEBUG
 DEBUG_FLAGS   = -g -O0 -Wall
-RELEASE_EXEC1  = MD5
-SOURCE1        = MD5.cpp
+RELEASE_EXEC  = hash
+DEBUG_EXEC    = hash-dbg
+SOURCE        = hash.cpp
 
-all: release
- 
+all: debug release
 
-release: $(RELEASE_EXEC1)
+debug: $(DEBUG_EXEC)
 
-$(RELEASE_EXEC1): $(SOURCE1)
-	g++ $(RELEASE_FLAGS) $(SOURCE1) -o $(RELEASE_EXEC1) -lcrypto++
+$(DEBUG_EXEC): $(SOURCE)
+	g++ $(DEBUG_FLAGS) $(SOURCE) -o $(DEBUG_EXEC) 
+
+release: $(RELEASE_EXEC)
+
+$(RELEASE_EXEC): $(SOURCE)
+	g++ $(RELEASE_FLAGS) $(SOURCE) -o $(RELEASE_EXEC)
 
 clean:
-	rm -f $(RELEASE_EXEC1)
+	rm -f $(RELEASE_EXEC) $(DEBUG_EXEC)
